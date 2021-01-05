@@ -1,2 +1,27 @@
 # react-native-secure-keypad
-react-native-secure-keypad 
+
+secure keypad for react-native
+
+## Installation
+
+```sh
+npm install react-native-secure-keypad
+```
+
+## Usage
+
+```js
+import SecureKeypad from "react-native-secure-keypad";
+
+// ...
+
+const result = await SecureKeypad.multiply(3, 7);
+```
+
+## Contributing
+
+See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
+
+## License
+
+MIT

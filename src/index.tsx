@@ -1,8 +1,7 @@
 import { NativeModules } from 'react-native';
 
 type SecureKeypadType = {
-  showWithRequestUrl(url: string): Promise<string>;
-  // initNumberPad(url: string): void;
+  showWithRequestUrl(url: string, maxLength: number, labelText: string): Promise<string>;
 };
 
 const { SecureKeypad } = NativeModules;

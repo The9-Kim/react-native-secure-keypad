@@ -17,7 +17,7 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
     private val TAG_SECURE_KEYPAD = "SECURE_KEYPAD"
     private val TAG_FAILED = "SECURE_KEYPAD_FAILED"
 
-    var currentMethod = "activity"
+    private var currentMethod = "activity"
     var strHashUrl = ""
     var strKpdType = "11"
     var strMethod = "json"
@@ -28,6 +28,8 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
     var strYskHash2 = ""
 
     private var mSecureKeypadPromise: Promise? = null
+    private var mLabelText: String = "암호 입력"
+    private var mMaxLength: Int = 6
 
     override fun getName(): String {
         return "SecureKeypad"
@@ -83,15 +85,18 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
         val keypadIntent = Intent(reactApplicationContext, YSecuKeypadNumberPadActivity::class.java)
 //        keypadIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         keypadIntent.putExtra("yskhash", strYskHash)
-        keypadIntent.putExtra("maxLength", 8)
+        keypadIntent.putExtra("maxLength", mMaxLength)
         keypadIntent.putExtra("isLandScape", false)
-        keypadIntent.putExtra("labelText", "암호 입력")
+        keypadIntent.putExtra("labelText", mLabelText)
         reactApplicationContext.startActivityForResult(keypadIntent, RUN_KEYPAD_REQUEST_CODE, Bundle.EMPTY)
     }
 
     @ReactMethod
-    fun showWithRequestUrl(url:String, promise: Promise) {
-        mSecureKeypadPromise = promise;
+    fun showWithRequestUrl(url:String, maxLength:Int, labelText:String, promise: Promise) {
+        mSecureKeypadPromise = promise
+        mMaxLength = maxLength
+        mLabelText = labelText
+
         if (strHashUrl.isBlank() || strMethod.isBlank() || strKpdType.isBlank()) {
             strHashUrl = url
             GetRequestHashDataTask().execute(strHashUrl, strMethod, strKpdType)

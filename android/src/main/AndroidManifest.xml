@@ -1,4 +1,26 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.reactnativesecurekeypad">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.reactnativesecurekeypad">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <application>
+        <!-- 문자키패드 UI -->
+<!--        <activity android:name=".QwertyPadViewActivity" android:screenOrientation="sensor" android:label="@string/menu_qwerty" android:configChanges="orientation|screenSize|keyboardHidden" android:windowSoftInputMode="adjustPan" android:exported="false"/>-->
 
+        <!-- 숫자키패드 UI -->
+<!--        <activity android:name=".NumberPadViewActivity" android:screenOrientation="sensor" android:label="@string/menu_number" android:configChanges="orientation|screenSize|keyboardHidden" android:windowSoftInputMode="adjustPan" android:exported="false"/>-->
+
+        <!-- 다중 숫자키패드 UI -->
+<!--        <activity android:name=".MultiNumberPadViewActivity" android:screenOrientation="sensor" android:label="@string/menu_number_multi" android:configChanges="orientation|screenSize|keyboardHidden" android:windowSoftInputMode="adjustPan" android:exported="false"/>-->
+
+        <!-- y-SecuKeypad QWERTY Keypad Activity UI -->
+        <activity android:name="com.yhdb.solution.ysecukeypad.library.keypad.YSecuKeypadQwertyPadActivity" android:screenOrientation="sensor" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar" android:configChanges="orientation|screenSize|keyboardHidden" android:windowSoftInputMode="adjustPan" android:exported="false"/>
+
+        <!-- y-SecuKeypad QWERTY Keypad View UI -->
+        <activity android:name="com.yhdb.solution.ysecukeypad.library.keypad.YSecuKeypadQwertyPadView" android:screenOrientation="sensor" android:label="@string/app_name" android:theme="@android:style/Theme.Translucent.NoTitleBar" android:configChanges="orientation|screenSize|keyboardHidden" android:windowSoftInputMode="adjustPan" android:exported="false"/>
+
+        <!-- y-SecuKeypad Number Keypad Activity UI -->
+        <activity android:name="com.yhdb.solution.ysecukeypad.library.keypad.YSecuKeypadNumberPadActivity" android:screenOrientation="sensor" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar" android:configChanges="orientation|screenSize|keyboardHidden" android:windowSoftInputMode="adjustPan" android:exported="false"/>
+
+        <!-- y-SecuKeypad Number Keypad View UI -->
+        <activity android:name="com.yhdb.solution.ysecukeypad.library.keypad.YSecuKeypadNumberPadView" android:screenOrientation="sensor" android:label="@string/app_name" android:theme="@android:style/Theme.Translucent.NoTitleBar" android:configChanges="orientation|screenSize|keyboardHidden" android:windowSoftInputMode="adjustPan" android:exported="false"/>
+    </application>
 </manifest>

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: ./libs/libYSecuKeypad_v1.0.5.jar">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/libYSecuKeypad_v1.0.5.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

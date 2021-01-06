@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+	 <!-- 클릭 했을 경우 -->
+    <item android:state_pressed="true">
+       	<shape>
+            <corners android:radius="8dp" />
+            <solid android:color="#247AB5" />
+        </shape>
+    </item>
+
+    <!-- 클릭하지 않은 경우 -->
+    <item android:state_pressed="false">
+        <shape>
+            <corners android:radius="8dp" />
+            <solid android:color="#247AB5" />
+        </shape>
+    </item>
+
+</selector>

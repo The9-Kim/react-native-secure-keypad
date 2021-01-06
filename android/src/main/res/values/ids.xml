@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- y-SecuKeypad Relative Layout -->
+    <item name="rl_all_layout" type="id"/>
+    <item name="rl_user_action_area_layout" type="id"/>
+    <item name="rl_user_action_layout" type="id"/>
+    <item name="rl_keypad_layout" type="id"/>
+    <item name="rl_keypad_first_row_layout" type="id"/>
+    <item name="rl_keypad_second_row_layout" type="id"/>
+    <item name="rl_keypad_third_row_layout" type="id"/>
+    <item name="rl_keypad_fourth_row_layout" type="id"/>
+    <item name="rl_keypad_fifth_row_layout" type="id"/>
+    <!-- y-SecuKeypad Relative Layout -->
+    
+    <!-- y-SecuKeypad Control -->
+    <item name="tv_label_text" type="id"/>
+    <item name="et_input_box" type="id"/>
+    <item name="btn_ysk_confirm" type="id"/>
+    <item name="btn_ysk_cancel" type="id"/>
+    
+    <item name="btn_ysk_shift" type="id"/>
+    <item name="btn_ysk_symbol" type="id"/>
+    <item name="btn_ysk_english" type="id"/>
+    <item name="btn_ysk_spacebar" type="id"/>
+    <item name="btn_ysk_rearrange" type="id"/>
+    <item name="btn_ysk_del" type="id"/>
+    <!-- y-SecuKeypad Control -->
+    
+    <!-- y-SecuKeypad Keypad Button -->
+    <item name="btn_ysk_key_1" type="id"/>
+    <item name="btn_ysk_key_2" type="id"/>
+    <item name="btn_ysk_key_3" type="id"/>
+    <item name="btn_ysk_key_4" type="id"/>
+    <item name="btn_ysk_key_5" type="id"/>
+    <item name="btn_ysk_key_6" type="id"/>
+    <item name="btn_ysk_key_7" type="id"/>
+    <item name="btn_ysk_key_8" type="id"/>
+    <item name="btn_ysk_key_9" type="id"/>
+    <item name="btn_ysk_key_10" type="id"/>
+    <item name="btn_ysk_key_11" type="id"/>
+    <item name="btn_ysk_key_12" type="id"/>
+    <item name="btn_ysk_key_13" type="id"/>
+    <item name="btn_ysk_key_14" type="id"/>
+    <item name="btn_ysk_key_15" type="id"/>
+    <item name="btn_ysk_key_16" type="id"/>
+    <item name="btn_ysk_key_17" type="id"/>
+    <item name="btn_ysk_key_18" type="id"/>
+    <item name="btn_ysk_key_19" type="id"/>
+    <item name="btn_ysk_key_20" type="id"/>
+    <item name="btn_ysk_key_21" type="id"/>
+    <item name="btn_ysk_key_22" type="id"/>
+    <item name="btn_ysk_key_23" type="id"/>
+    <item name="btn_ysk_key_24" type="id"/>
+    <item name="btn_ysk_key_25" type="id"/>
+    <item name="btn_ysk_key_26" type="id"/>
+    <item name="btn_ysk_key_27" type="id"/>
+    <item name="btn_ysk_key_28" type="id"/>
+    <item name="btn_ysk_key_29" type="id"/>
+    <item name="btn_ysk_key_30" type="id"/>
+    <item name="btn_ysk_key_31" type="id"/>
+    <item name="btn_ysk_key_32" type="id"/>
+    <item name="btn_ysk_key_33" type="id"/>
+    <item name="btn_ysk_key_34" type="id"/>
+    <item name="btn_ysk_key_35" type="id"/>
+    <item name="btn_ysk_key_36" type="id"/>
+    <!-- y-SecuKeypad Keypad Button -->
+</resources>

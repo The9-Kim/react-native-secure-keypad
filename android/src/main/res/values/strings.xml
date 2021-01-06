@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NativeAppSample</string>
+
+    <string name="menu_qwerty">문자키패드</string>
+    <string name="menu_number">숫자키패드</string>
+    <string name="menu_number_multi">다중 숫자키패드</string>
+
+    <string name="label_call_method">가상키패드 호출방식 : </string>
+    <string name="label_call_method1">가상키패드 호출방식1 : </string>
+    <string name="label_call_method2">가상키패드 호출방식2 : </string>
+
+    <string name="call_method_activity">Activity</string>
+    <string name="call_method_view">View</string>
+
+    <string name="label_input_password">암호 입력 : </string>
+    <string name="label_input_password1">암호 입력1 : </string>
+    <string name="label_input_password2">암호 입력2 : </string>
+
+    <string name="label_input_value">입력값 : </string>
+    <string name="label_input_value1">입력값1 : </string>
+    <string name="label_input_value2">입력값2 : </string>
+
+    <string name="label_input_hash">입력값 해쉬값 : </string>
+    <string name="label_input_hash1">입력값 해쉬값1 : </string>
+    <string name="label_input_hash2">입력값 해쉬값2 : </string>
+
+    <string name="label_decode_value">입력값 복호화 : </string>
+    <string name="label_decode_value1">입력값 복호화1 : </string>
+    <string name="label_decode_value2">입력값 복호화2 : </string>
+
+    <string name="button_ok">확인</string>
+    <string name="button_cancel">취소</string>
+</resources>

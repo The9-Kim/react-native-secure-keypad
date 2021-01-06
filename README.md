@@ -5,7 +5,7 @@ secure keypad for react-native
 ## Installation
 
 ```sh
-npm install react-native-secure-keypad
+yarn add git+https://git@github.com/The9-Kim//react-native-secure-keypad.git
 ```
 
 ## Usage
@@ -15,7 +15,7 @@ import SecureKeypad from "react-native-secure-keypad";
 
 // ...
 
-const result = await SecureKeypad.multiply(3, 7);
+const result = await SecureKeypad.showWithRequestUrl(PATH.키패드해시요청);
 ```
 
 ## Contributing

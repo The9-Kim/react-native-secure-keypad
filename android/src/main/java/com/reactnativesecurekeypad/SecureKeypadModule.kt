@@ -92,9 +92,17 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
     }
 
     @ReactMethod
-    fun showWithRequestUrl(url:String, maxLength:Int, labelText:String, promise: Promise) {
+    fun show(url:String, maxLength:Int, labelText:String, promise: Promise) {
         mSecureKeypadPromise = promise
-        mMaxLength = maxLength
+        mMaxLength = when {
+            maxLength>0 -> {
+                maxLength
+            }
+            else -> {
+                6
+            }
+        }
+
         mLabelText = labelText
 
         if (strHashUrl.isBlank() || strMethod.isBlank() || strKpdType.isBlank()) {

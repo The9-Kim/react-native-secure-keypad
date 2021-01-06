@@ -5,7 +5,7 @@ secure keypad for react-native
 ## Installation
 
 ```sh
-yarn add git+https://git@github.com/The9-Kim//react-native-secure-keypad.git
+yarn add https://github.com/The9-Kim/react-native-secure-keypad
 ```
 
 ## Usage

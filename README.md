@@ -15,7 +15,8 @@ import SecureKeypad from "react-native-secure-keypad";
 
 // ...
 
-const result = await SecureKeypad.showWithRequestUrl(PATH.키패드해시요청);
+const result = await SecureKeypad.showWithRequestUrl(PATH.키패드해시요청, 6, '거래 승인번호 입력');
+
 ```
 
 ## Contributing

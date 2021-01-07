@@ -47,6 +47,7 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
                             val jsonResult = JSONObject()
                             jsonResult.put("inputValue", inputValue)
                             jsonResult.put("inputHash", inputHash)
+                            jsonResult.put("strCookie", strCookie)
 
                             mSecureKeypadPromise?.let { promise ->
                                 promise.resolve(jsonResult.toString())

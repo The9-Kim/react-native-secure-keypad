@@ -20,7 +20,7 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
     private var currentMethod = "activity"
     var strHashUrl = ""
     var strKpdType = "11"
-    var strMethod = "json"
+    var strMethod = "xml"
 
     var strCookie = ""
     var strYskHash = ""
@@ -36,7 +36,7 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
     }
     private val mActivityEventListener: ActivityEventListener = object : BaseActivityEventListener() {
         override fun onActivityResult(activity: Activity, requestCode: Int, resultCode: Int, intent: Intent?) {
-//            Log.d(TAG_SECURE_KEYPAD, "onActivityResult :: ${requestCode}, ${resultCode}, ${intent}")
+            Log.d(TAG_SECURE_KEYPAD, "onActivityResult :: ${requestCode}, ${resultCode}, ${intent}")
 
             if (requestCode == RUN_KEYPAD_REQUEST_CODE) {
                 if (mSecureKeypadPromise != null) {
@@ -124,11 +124,12 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
     inner class GetRequestHashDataTask : AsyncTask<String?, Void?, Map<String?, String?>>() {
         override fun onPostExecute(result: Map<String?, String?>) {
             super.onPostExecute(result)
-//            Log.d(TAG_SECURE_KEYPAD, result.entries.toTypedArray().contentToString())
+            Log.d(TAG_SECURE_KEYPAD, result.entries.toTypedArray().contentToString())
             val code = result["code"]
+            val strMessage = result["message"]
+
             if (code != null && "" != code && "0000" == code) {
                 val strCode = result["code"]
-                val strMessage = result["message"]
                 if ("0000" == strCode) {
                     strCookie = result["cookie"].toString()
                     strYskHash = result["yskhash"].toString()
@@ -140,7 +141,7 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
                 }
             } else {
                 mSecureKeypadPromise?.let { promise ->
-                    promise.reject(TAG_FAILED, "[$code]키패드 호출 오류")
+                    promise.reject(TAG_FAILED, "[$code] $strMessage")
                     mSecureKeypadPromise = null
                 }
             }

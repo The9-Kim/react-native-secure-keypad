@@ -20,7 +20,7 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
     private var currentMethod = "activity"
     var strHashUrl = ""
     var strKpdType = "11"
-    var strMethod = "xml"
+    var strMethod = "json"
 
     var strCookie = ""
     var strYskHash = ""

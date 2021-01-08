@@ -132,7 +132,7 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
         strSavePwUrl = url
 
         if (strSavePwUrl.isNotBlank()) {
-//            SendDataTask().execute(kpdType, inputHash, "", "")
+            SendDataTask().execute(kpdType, inputHash, "", "", membCd, appCd)
         }
     }
 
@@ -218,15 +218,22 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
             val hashValue = params[1]
             val kpdType2 = params[2]
             val hashValue2 = params[3]
+
+            val membCd = params[4]
+            val appCd = params[5]
+
             var xmlData: String? = null
             try {
                 val decodeUrl = URL("http://127.0.0.1:8080/y-SecuKeypadAppServer/yhdb/secukeypad/yskdecode_sample.jsp")
                 val strParam = (URLEncoder.encode("kpdType", "UTF-8") + "=" + URLEncoder.encode(kpdType, "UTF-8")
                         + "&" + URLEncoder.encode("hValue", "UTF-8") + "=" + URLEncoder.encode(hashValue, "UTF-8")
                         + "&" + URLEncoder.encode("kpdType2", "UTF-8") + "=" + URLEncoder.encode(kpdType2, "UTF-8")
-                        + "&" + URLEncoder.encode("hValue2", "UTF-8") + "=" + URLEncoder.encode(hashValue2, "UTF-8"))
+                        + "&" + URLEncoder.encode("hValue2", "UTF-8") + "=" + URLEncoder.encode(hashValue2, "UTF-8")
+                        + "&" + URLEncoder.encode("membCd", "UTF-8") + "=" + URLEncoder.encode(membCd, "UTF-8")
+                        + "&" + URLEncoder.encode("appCd", "UTF-8") + "=" + URLEncoder.encode(appCd, "UTF-8"))
                 val httpUtil = HttpUtil()
                 xmlData = httpUtil.httpRequest(decodeUrl, strCookie, strParam, reactApplicationContext)
+                Log.d(TAG_SECURE_KEYPAD, "xmlData :: $xmlData")
             } catch (e: MalformedURLException) {
             } catch (e: UnsupportedEncodingException) {
             }

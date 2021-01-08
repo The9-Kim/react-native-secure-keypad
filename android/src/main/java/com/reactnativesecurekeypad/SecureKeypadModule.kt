@@ -127,7 +127,7 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
     }
 
     @ReactMethod
-    fun saveTranPw(url:String, inputHash:String, kpdType:String, promise: Promise) {
+    fun saveTranPw(url:String, inputHash:String, kpdType:String, membCd:String, appCd:String, promise: Promise) {
         mSaveTranPwPromise = promise
         strSavePwUrl = url
 
@@ -183,55 +183,56 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
     /**
      * 복호화 요청
      */
-//    inner class SendDataTask : AsyncTask<String?, Void?, Map<String?, String?>>() {
-//        override fun onPostExecute(result: Map<String?, String?>) {
-//            super.onPostExecute(result)
-//            Log.d(TAG_SECURE_KEYPAD, "SendDataTask" + result.entries.toTypedArray().contentToString())
-////            if (parseResult != null) {
-////                val code = parseResult["code"]
-////                if ("0000" == code) {
-////                    val decodeStr = parseResult["decodeStr"]
-////                    tvDecodeValue1.setText(decodeStr)
-////                    val decodeStr2 = parseResult["decodeStr2"]
-////                    tvDecodeValue2.setText(decodeStr2)
-////                } else {
-////                    val message = parseResult["message"]
-////                    val alertDlg = AlertDialog.Builder(this@MultiNumberPadViewActivity)
-////                    alertDlg.setTitle("오류")
-////                    alertDlg.setMessage(message)
-////                    alertDlg.setCancelable(false)
-////                    alertDlg.setNegativeButton("확인", null)
-////                    alertDlg.show()
-////                }
-////            } else {
-////                val alertDlg = AlertDialog.Builder(this@MultiNumberPadViewActivity)
-////                alertDlg.setTitle("오류")
-////                alertDlg.setMessage("복호화 결과 파싱에 실패하였습니다.")
-////                alertDlg.setCancelable(false)
-////                alertDlg.setNegativeButton("확인", null)
-////                alertDlg.show()
-////            }
-//        }
-//
-//        override fun doInBackground(vararg params: String?): Map<String?, String?>? {
-//            val kpdType = params[0]
-//            val hashValue = params[1]
-//            val kpdType2 = params[2]
-//            val hashValue2 = params[3]
-//            var xmlData: String? = null
-//            try {
-//                val decodeUrl = URL("http://127.0.0.1:8080/y-SecuKeypadAppServer/yhdb/secukeypad/yskdecode_sample.jsp")
-//                val strParam = (URLEncoder.encode("kpdType", "UTF-8") + "=" + URLEncoder.encode(kpdType, "UTF-8")
-//                        + "&" + URLEncoder.encode("hValue", "UTF-8") + "=" + URLEncoder.encode(hashValue, "UTF-8")
-//                        + "&" + URLEncoder.encode("kpdType2", "UTF-8") + "=" + URLEncoder.encode(kpdType2, "UTF-8")
-//                        + "&" + URLEncoder.encode("hValue2", "UTF-8") + "=" + URLEncoder.encode(hashValue2, "UTF-8"))
-//                val httpUtil = HttpUtil()
-//                xmlData = httpUtil.httpRequest(decodeUrl, strCookie, strParam, reactApplicationContext)
-//            } catch (e: MalformedURLException) {
-//            } catch (e: UnsupportedEncodingException) {
+    inner class SendDataTask : AsyncTask<String?, Void?, Map<String?, String?>>() {
+        override fun onPostExecute(result: Map<String?, String?>) {
+            super.onPostExecute(result)
+            Log.d(TAG_SECURE_KEYPAD, "SendDataTask" + result.entries.toTypedArray().contentToString())
+//            if (parseResult != null) {
+//                val code = parseResult["code"]
+//                if ("0000" == code) {
+//                    val decodeStr = parseResult["decodeStr"]
+//                    tvDecodeValue1.setText(decodeStr)
+//                    val decodeStr2 = parseResult["decodeStr2"]
+//                    tvDecodeValue2.setText(decodeStr2)
+//                } else {
+//                    val message = parseResult["message"]
+//                    val alertDlg = AlertDialog.Builder(this@MultiNumberPadViewActivity)
+//                    alertDlg.setTitle("오류")
+//                    alertDlg.setMessage(message)
+//                    alertDlg.setCancelable(false)
+//                    alertDlg.setNegativeButton("확인", null)
+//                    alertDlg.show()
+//                }
+//            } else {
+//                val alertDlg = AlertDialog.Builder(this@MultiNumberPadViewActivity)
+//                alertDlg.setTitle("오류")
+//                alertDlg.setMessage("복호화 결과 파싱에 실패하였습니다.")
+//                alertDlg.setCancelable(false)
+//                alertDlg.setNegativeButton("확인", null)
+//                alertDlg.show()
 //            }
-//            return xmlData
-//        }
-//    }
+        }
+
+        override fun doInBackground(vararg params: String?): Map<String?, String?>? {
+            val kpdType = params[0]
+            val hashValue = params[1]
+            val kpdType2 = params[2]
+            val hashValue2 = params[3]
+            var xmlData: String? = null
+            try {
+                val decodeUrl = URL("http://127.0.0.1:8080/y-SecuKeypadAppServer/yhdb/secukeypad/yskdecode_sample.jsp")
+                val strParam = (URLEncoder.encode("kpdType", "UTF-8") + "=" + URLEncoder.encode(kpdType, "UTF-8")
+                        + "&" + URLEncoder.encode("hValue", "UTF-8") + "=" + URLEncoder.encode(hashValue, "UTF-8")
+                        + "&" + URLEncoder.encode("kpdType2", "UTF-8") + "=" + URLEncoder.encode(kpdType2, "UTF-8")
+                        + "&" + URLEncoder.encode("hValue2", "UTF-8") + "=" + URLEncoder.encode(hashValue2, "UTF-8"))
+                val httpUtil = HttpUtil()
+                xmlData = httpUtil.httpRequest(decodeUrl, strCookie, strParam, reactApplicationContext)
+            } catch (e: MalformedURLException) {
+            } catch (e: UnsupportedEncodingException) {
+            }
+            val test = hashma<String, String>()
+            return xmlData
+        }
+    }
 
 }

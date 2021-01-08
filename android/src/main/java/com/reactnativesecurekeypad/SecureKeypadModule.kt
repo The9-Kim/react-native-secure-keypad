@@ -230,8 +230,8 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
             } catch (e: MalformedURLException) {
             } catch (e: UnsupportedEncodingException) {
             }
-            val test = hashma<String, String>()
-            return xmlData
+            val test = emptyMap<String?, String?>()
+            return test
         }
     }
 

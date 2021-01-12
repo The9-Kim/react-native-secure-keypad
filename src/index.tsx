@@ -2,7 +2,8 @@ import { NativeModules } from 'react-native';
 
 type SecureKeypadType = {
   show(url: string, maxLength: number, labelText: string): Promise<string>;
-  saveTranPw(url: string, inputHash: string, kpdType: string, membCd:string, appCd:string): Promise<string>;
+  request(url: string, inputHash: string, token: string): Promise<string>;
+  getRequestHeader(): Promise<string>;
 };
 
 const { SecureKeypad } = NativeModules;

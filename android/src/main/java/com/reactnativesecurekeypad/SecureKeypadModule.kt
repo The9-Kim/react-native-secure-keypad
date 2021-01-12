@@ -6,13 +6,13 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import com.facebook.react.bridge.*
+import com.yhdb.solution.ysecukeypad.library.common.CommonUtil
 import com.yhdb.solution.ysecukeypad.library.keypad.RequestSecuKeypadHash
 import com.yhdb.solution.ysecukeypad.library.keypad.YSecuKeypadNumberPadActivity
 import org.json.JSONObject
 import java.io.UnsupportedEncodingException
 import java.net.MalformedURLException
 import java.net.URL
-import java.net.URLEncoder
 
 
 class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
@@ -22,7 +22,7 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
 
     private var currentMethod = "activity"
 
-    var strSavePwUrl = ""
+    var strRequestUrl = ""
 
     var strHashUrl = ""
     var strKpdType = "11"
@@ -34,7 +34,7 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
     var strYskHash2 = ""
 
     private var mSecureKeypadPromise: Promise? = null
-    private var mSaveTranPwPromise: Promise? = null
+    private var mRequestPromise: Promise? = null
 
     private var mLabelText: String = "암호 입력"
     private var mMaxLength: Int = 6
@@ -53,9 +53,13 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
                             val inputValue = intent.getExtras()!!.getString("inputValue")
                             val inputHash = intent.getExtras()!!.getString("inputHash")
                             val jsonResult = JSONObject()
+                            val hashPackageName = CommonUtil.getHashPackageName(reactApplicationContext)
+
                             jsonResult.put("inputValue", inputValue)
                             jsonResult.put("inputHash", inputHash)
                             jsonResult.put("strCookie", strCookie)
+                            jsonResult.put("hashPackageName", hashPackageName)
+
 
                             mSecureKeypadPromise?.let { promise ->
                                 promise.resolve(jsonResult.toString())
@@ -101,7 +105,19 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
     }
 
     @ReactMethod
-    fun show(url:String, maxLength:Int, labelText:String, promise: Promise) {
+    fun getRequestHeader(promise: Promise) {
+        val hashPackageName = CommonUtil.getHashPackageName(reactApplicationContext)
+        val xApplication = "yhdatabase"
+        val jsonObject = JSONObject()
+        jsonObject.put("hashPackageName", hashPackageName);
+        jsonObject.put("xApplication", xApplication);
+        // Log.d(TAG_SECURE_KEYPAD, "jsonObject :: "+jsonObject.toString());
+        promise.resolve(jsonObject.toString())
+        // return jsonObject.toString()
+    }
+
+    @ReactMethod
+    fun show(url: String, maxLength: Int, labelText: String, promise: Promise) {
         mSecureKeypadPromise = promise
         mMaxLength = when {
             maxLength>0 -> {
@@ -127,12 +143,12 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
     }
 
     @ReactMethod
-    fun saveTranPw(url:String, inputHash:String, kpdType:String, membCd:String, appCd:String, promise: Promise) {
-        mSaveTranPwPromise = promise
-        strSavePwUrl = url
+    fun request(url: String, bodyJsonStr: String, token: String, promise: Promise) {
+        mRequestPromise = promise
+        strRequestUrl = url
 
-        if (strSavePwUrl.isNotBlank()) {
-            SendDataTask().execute(kpdType, inputHash, "", "", membCd, appCd)
+        if (strRequestUrl.isNotBlank()) {
+           SendDataTask().execute(strKpdType, bodyJsonStr, token, strRequestUrl)
         }
     }
 
@@ -183,10 +199,25 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
     /**
      * 복호화 요청
      */
-    inner class SendDataTask : AsyncTask<String?, Void?, Map<String?, String?>>() {
-        override fun onPostExecute(result: Map<String?, String?>) {
+    inner class SendDataTask : AsyncTask<String?, Void?, String?>() {
+        override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
-            Log.d(TAG_SECURE_KEYPAD, "SendDataTask" + result.entries.toTypedArray().contentToString())
+            val resultJsonObject = JSONObject(result)
+            val code = resultJsonObject.getString("code")
+            if (code == "0000") {
+                mRequestPromise?.let { promise ->
+                    promise.resolve(result)
+                    mRequestPromise = null
+                }
+            } else {
+                mRequestPromise?.let { promise ->
+                    promise.reject(code, resultJsonObject.getString("message"))
+                    mRequestPromise = null
+                }
+            }
+
+            
+//            Log.d(TAG_SECURE_KEYPAD, "SendDataTask" + result)
 //            if (parseResult != null) {
 //                val code = parseResult["code"]
 //                if ("0000" == code) {
@@ -213,32 +244,38 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
 //            }
         }
 
-        override fun doInBackground(vararg params: String?): Map<String?, String?>? {
+        override fun doInBackground(vararg params: String?): String? {
+            // SendDataTask().execute(strKpdType, bodyJsonStr, "", "", token, strRequestUrl)
+
             val kpdType = params[0]
-            val hashValue = params[1]
-            val kpdType2 = params[2]
-            val hashValue2 = params[3]
+            val bodyJsonStr = params[1]
+            val userToken = params[2]
+            val url = params[3]
 
-            val membCd = params[4]
-            val appCd = params[5]
-
-            var xmlData: String? = null
+            val jsonObject = JSONObject(bodyJsonStr)
+            var resultData: String? = null
             try {
-                val decodeUrl = URL("http://127.0.0.1:8080/y-SecuKeypadAppServer/yhdb/secukeypad/yskdecode_sample.jsp")
-                val strParam = (URLEncoder.encode("kpdType", "UTF-8") + "=" + URLEncoder.encode(kpdType, "UTF-8")
-                        + "&" + URLEncoder.encode("hValue", "UTF-8") + "=" + URLEncoder.encode(hashValue, "UTF-8")
-                        + "&" + URLEncoder.encode("kpdType2", "UTF-8") + "=" + URLEncoder.encode(kpdType2, "UTF-8")
-                        + "&" + URLEncoder.encode("hValue2", "UTF-8") + "=" + URLEncoder.encode(hashValue2, "UTF-8")
-                        + "&" + URLEncoder.encode("membCd", "UTF-8") + "=" + URLEncoder.encode(membCd, "UTF-8")
-                        + "&" + URLEncoder.encode("appCd", "UTF-8") + "=" + URLEncoder.encode(appCd, "UTF-8"))
+                val decodeUrl = URL(url)
+
+                jsonObject.put("kpdType", kpdType);
+                // jsonObject.put("membCd", membCd);
+                // jsonObject.put("appCd", appCd);
+
                 val httpUtil = HttpUtil()
-                xmlData = httpUtil.httpRequest(decodeUrl, strCookie, strParam, reactApplicationContext)
-                Log.d(TAG_SECURE_KEYPAD, "xmlData :: $xmlData")
+                resultData = httpUtil.httpRequest(decodeUrl, strCookie, jsonObject, reactApplicationContext, userToken)
             } catch (e: MalformedURLException) {
+                mRequestPromise?.let { promise ->
+                    promise.reject(TAG_FAILED, e.localizedMessage)
+                    mRequestPromise = null
+                }
             } catch (e: UnsupportedEncodingException) {
+                mRequestPromise?.let { promise ->
+                    promise.reject(TAG_FAILED, e.localizedMessage)
+                    mRequestPromise = null
+                }
             }
-            val test = emptyMap<String?, String?>()
-            return test
+
+            return resultData
         }
     }
 

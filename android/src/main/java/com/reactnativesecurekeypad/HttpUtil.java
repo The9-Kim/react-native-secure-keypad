@@ -4,6 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 import com.yhdb.solution.ysecukeypad.library.common.CommonUtil;
+
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -29,21 +32,21 @@ public class HttpUtil {
     public HttpURLConnection conHttp;	// http 연결
 
     @SuppressLint("DefaultLocale")
-    public String httpRequest(URL url, String cookie, String lParam, Context mContext) {
+    public String httpRequest(URL url, String cookie, JSONObject lParam, Context mContext, String userToken) {
         String strReturn = "";
         this.cookies = cookie;
         String hashPackageName = CommonUtil.getHashPackageName(mContext);
 
         if("https".equals(url.getProtocol().toLowerCase())) {
-            strReturn = this.httpsConnect(url, lParam, hashPackageName);
+            strReturn = this.httpsConnect(url, lParam, hashPackageName, userToken);
         } else {
-            strReturn = this.httpConnect(url, lParam, hashPackageName);
+            strReturn = this.httpConnect(url, lParam, hashPackageName, userToken);
         }
 
         return strReturn;
     }
 
-    private String httpsConnect(URL url, String lParam, String hashPackageName) {
+    private String httpsConnect(URL url, JSONObject lParam, String hashPackageName, String userToken) {
         String value = "";
         try {
             System.setProperty("http.keepAlive", "true");
@@ -69,13 +72,14 @@ public class HttpUtil {
             conHttps.setUseCaches(false);
             conHttps.setConnectTimeout(120 * 1000);
             conHttps.setReadTimeout(120 * 1000);
-            conHttps.setRequestProperty("Content-Length", Integer.toString(lParam.getBytes().length));
+//            conHttps.setRequestProperty("Content-Length", Integer.toString(lParam.getBytes().length));
             conHttps.setRequestProperty("Connection", "Keep-Alive");
             conHttps.setRequestMethod("POST");
             conHttps.setRequestProperty("Host", url.getHost());
-            conHttps.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+            conHttps.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             conHttps.setRequestProperty("X-Application", "yhdatabase");
             conHttps.setRequestProperty("yskpd_license_info", hashPackageName);
+            conHttps.setRequestProperty("Authorization", "Bearer " + userToken);
             if(cookies != null) {
                 conHttps.setRequestProperty("Cookie", cookies);
             }
@@ -85,7 +89,7 @@ public class HttpUtil {
 
             DataOutputStream ostream = null;
             ostream = new DataOutputStream(conHttps.getOutputStream());
-            ostream.writeBytes(lParam);
+            ostream.writeBytes(lParam.toString());
             ostream.flush();
             ostream.close();
 
@@ -197,38 +201,43 @@ public class HttpUtil {
         }
     }
 
-    private String httpConnect(URL url, String lParam, String hashPackageName) {
+    private String httpConnect(URL url, JSONObject lParam, String hashPackageName, String userToken) {
         String value = "";
+        String json = lParam.toString();
         try {
             System.setProperty("http.keepAlive", "false");
+
             conHttp = (HttpURLConnection)url.openConnection();
             conHttp.setUseCaches(false);
             conHttp.setConnectTimeout(120 * 1000);
             conHttp.setReadTimeout(120 * 1000);
-            conHttp.setRequestProperty("Content-Length", Integer.toString(lParam.getBytes().length));
+            // conHttp.setRequestProperty("Content-Length", Integer.toString(lParam.getBytes().length));
             conHttp.setRequestProperty("Connection", "Keep-Alive");
             conHttp.setRequestMethod("POST");
             conHttp.setRequestProperty("Host", url.getHost());
-            conHttp.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+            conHttp.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             conHttp.setRequestProperty("X-Application", "yhdatabase");
             conHttp.setRequestProperty("yskpd_license_info", hashPackageName);
+            conHttp.setRequestProperty("Authorization", "Bearer " + userToken);
+
             if(cookies != null) {
                 conHttp.setRequestProperty("Cookie", cookies);
             }
+
             conHttp.setDoOutput(true);
             conHttp.setDoInput(true);
             conHttp.connect();
 
             DataOutputStream ostream = null;
             ostream = new DataOutputStream(conHttp.getOutputStream());
-            ostream.writeBytes(lParam);
+            ostream.writeBytes(json);
             ostream.flush();
             ostream.close();
 
             InputStream instream = conHttp.getInputStream();
-
             if(conHttp.getResponseCode() == HttpsURLConnection.HTTP_OK) {
                 String cookiesTmp = readHttpCookies(conHttp);
+
                 if(cookiesTmp != null) {
                     cookies = cookiesTmp;
                 }

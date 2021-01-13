@@ -1,5 +1,5 @@
 declare type SecureKeypadType = {
-    show(url: string, maxLength: number, labelText: string): Promise<string>;
+    show(url: string, maxLength: number, labelText: string, isNeedNewHash: boolean): Promise<string>;
     request(url: string, inputHash: string, token: string): Promise<string>;
     getRequestHeader(): Promise<string>;
 };

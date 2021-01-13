@@ -117,7 +117,7 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
     }
 
     @ReactMethod
-    fun show(url: String, maxLength: Int, labelText: String, promise: Promise) {
+    fun show(url: String, maxLength: Int, labelText: String, isNeedNewHash: Boolean, promise: Promise) {
         mSecureKeypadPromise = promise
         mMaxLength = when {
             maxLength>0 -> {
@@ -131,14 +131,16 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
         mLabelText = labelText
 
         // if (strHashUrl.isBlank() || strMethod.isBlank() || strKpdType.isBlank()) {
+        if (isNeedNewHash) {
             strHashUrl = url
             GetRequestHashDataTask().execute(strHashUrl, strMethod, strKpdType)
+        }
         // }
 
 //        Log.d(TAG_SECURE_KEYPAD, "${strHashUrl}, ${strMethod}, ${strKpdType}")
-        // if (strYskHash.isNotBlank()) {
-        //     showKeypad();
-        // }
+        if (strYskHash.isNotBlank()) {
+            showKeypad();
+        }
 
     }
 
@@ -148,7 +150,7 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
         strRequestUrl = url
 
         if (strRequestUrl.isNotBlank()) {
-           SendDataTask().execute(strKpdType, bodyJsonStr, token, strRequestUrl)
+            SendDataTask().execute(strKpdType, bodyJsonStr, token, strRequestUrl)
         }
     }
 
@@ -216,7 +218,7 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
                 }
             }
 
-            
+
 //            Log.d(TAG_SECURE_KEYPAD, "SendDataTask" + result)
 //            if (parseResult != null) {
 //                val code = parseResult["code"]

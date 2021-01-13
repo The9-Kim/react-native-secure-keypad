@@ -130,15 +130,15 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
 
         mLabelText = labelText
 
-        if (strHashUrl.isBlank() || strMethod.isBlank() || strKpdType.isBlank()) {
+        // if (strHashUrl.isBlank() || strMethod.isBlank() || strKpdType.isBlank()) {
             strHashUrl = url
             GetRequestHashDataTask().execute(strHashUrl, strMethod, strKpdType)
-        }
+        // }
 
 //        Log.d(TAG_SECURE_KEYPAD, "${strHashUrl}, ${strMethod}, ${strKpdType}")
-        if (strYskHash.isNotBlank()) {
-            showKeypad();
-        }
+        // if (strYskHash.isNotBlank()) {
+        //     showKeypad();
+        // }
 
     }
 

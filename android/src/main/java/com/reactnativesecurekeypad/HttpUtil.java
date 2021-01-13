@@ -12,8 +12,10 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -48,6 +50,8 @@ public class HttpUtil {
 
     private String httpsConnect(URL url, JSONObject lParam, String hashPackageName, String userToken) {
         String value = "";
+        String json = lParam.toString();
+
         try {
             System.setProperty("http.keepAlive", "true");
             SSLContext sc = null;
@@ -87,11 +91,17 @@ public class HttpUtil {
             conHttps.setDoInput(true);
             conHttps.connect();
 
-            DataOutputStream ostream = null;
-            ostream = new DataOutputStream(conHttps.getOutputStream());
-            ostream.writeBytes(lParam.toString());
+//            DataOutputStream ostream = null;
+//            ostream = new DataOutputStream(conHttps.getOutputStream());
+//            ostream.writeBytes(lParam.toString());
+//            ostream.flush();
+//            ostream.close();
+
+            OutputStream ostream = conHttp.getOutputStream();
+            ostream.write(json.getBytes("UTF-8"));
             ostream.flush();
             ostream.close();
+
 
             InputStream instream = conHttps.getInputStream();
 
@@ -228,11 +238,16 @@ public class HttpUtil {
             conHttp.setDoInput(true);
             conHttp.connect();
 
-            DataOutputStream ostream = null;
-            ostream = new DataOutputStream(conHttp.getOutputStream());
-            ostream.writeBytes(json);
+            OutputStream ostream = conHttp.getOutputStream();
+            ostream.write(json.getBytes("UTF-8"));
             ostream.flush();
             ostream.close();
+
+//            DataOutputStream ostream = null;
+//            ostream = new DataOutputStream(conHttp.getOutputStream());
+//            ostream.writeBytes(Charset.forName("UTF-8").encode(json));
+//            ostream.flush();
+//            ostream.close();
 
             InputStream instream = conHttp.getInputStream();
             if(conHttp.getResponseCode() == HttpsURLConnection.HTTP_OK) {

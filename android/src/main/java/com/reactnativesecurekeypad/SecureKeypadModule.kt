@@ -134,13 +134,13 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
         if (isNeedNewHash) {
             strHashUrl = url
             GetRequestHashDataTask().execute(strHashUrl, strMethod, strKpdType)
-        }
+        } else if (strYskHash.isNotBlank()) {
+            showKeypad();
+        } 
         // }
 
 //        Log.d(TAG_SECURE_KEYPAD, "${strHashUrl}, ${strMethod}, ${strKpdType}")
-        if (strYskHash.isNotBlank()) {
-            showKeypad();
-        }
+
 
     }
 

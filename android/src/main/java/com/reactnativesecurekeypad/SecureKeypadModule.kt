@@ -60,7 +60,6 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
                             jsonResult.put("strCookie", strCookie)
                             jsonResult.put("hashPackageName", hashPackageName)
 
-
                             mSecureKeypadPromise?.let { promise ->
                                 promise.resolve(jsonResult.toString())
                                 mSecureKeypadPromise = null
@@ -130,18 +129,12 @@ class SecureKeypadModule(reactContext: ReactApplicationContext) : ReactContextBa
 
         mLabelText = labelText
 
-        // if (strHashUrl.isBlank() || strMethod.isBlank() || strKpdType.isBlank()) {
         if (isNeedNewHash) {
             strHashUrl = url
             GetRequestHashDataTask().execute(strHashUrl, strMethod, strKpdType)
         } else if (strYskHash.isNotBlank()) {
             showKeypad();
         } 
-        // }
-
-//        Log.d(TAG_SECURE_KEYPAD, "${strHashUrl}, ${strMethod}, ${strKpdType}")
-
-
     }
 
     @ReactMethod

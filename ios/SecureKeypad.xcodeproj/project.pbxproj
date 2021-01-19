@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-
-		5E555C0D2413F4C50049A1A2 /* SecureKeypad.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* SecureKeypad.m */; };
-		F4FF95D7245B92E800C19C63 /*  SecureKeypad.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF95D6245B92E800C19C63 /*  SecureKeypad.swift */; };
-
+		90C28A3925B6784400D47D75 /* YSecuKeypadSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90C28A3825B6784400D47D75 /* YSecuKeypadSDK.framework */; };
+		90C28A3D25B678B200D47D75 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90C28A3C25B678B200D47D75 /* AudioToolbox.framework */; };
+		90C28A3F25B6791700D47D75 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 90C28A3E25B6791700D47D75 /* libz.tbd */; };
+		F4FF95D7245B92E800C19C63 /* SecureKeypad.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF95D6245B92E800C19C63 /* SecureKeypad.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,11 +27,13 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libSecureKeypad.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSecureKeypad.a; sourceTree = BUILT_PRODUCTS_DIR; };
-
+		90C28A3825B6784400D47D75 /* YSecuKeypadSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = YSecuKeypadSDK.framework; sourceTree = "<group>"; };
+		90C28A3C25B678B200D47D75 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
+		90C28A3E25B6791700D47D75 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
+		90C28A4125B6953A00D47D75 /* SecureKeypad-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SecureKeypad-Bridging-Header.h"; sourceTree = "<group>"; };
+		90C28A4225B6958F00D47D75 /* SecureKeypad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecureKeypad.h; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* SecureKeypad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecureKeypad.m; sourceTree = "<group>"; };
-		F4FF95D5245B92E700C19C63 /* SecureKeypad-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SecureKeypad-Bridging-Header.h"; sourceTree = "<group>"; };
 		F4FF95D6245B92E800C19C63 /* SecureKeypad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureKeypad.swift; sourceTree = "<group>"; };
-
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,6 +41,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				90C28A3F25B6791700D47D75 /* libz.tbd in Frameworks */,
+				90C28A3D25B678B200D47D75 /* AudioToolbox.framework in Frameworks */,
+				90C28A3925B6784400D47D75 /* YSecuKeypadSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,13 +61,31 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-
+				90C28A3A25B6785500D47D75 /* Library */,
 				F4FF95D6245B92E800C19C63 /* SecureKeypad.swift */,
+				90C28A4225B6958F00D47D75 /* SecureKeypad.h */,
 				B3E7B5891CC2AC0600A0062D /* SecureKeypad.m */,
-				F4FF95D5245B92E700C19C63 /* SecureKeypad-Bridging-Header.h */,
-
+				90C28A4125B6953A00D47D75 /* SecureKeypad-Bridging-Header.h */,
 				134814211AA4EA7D00B7C361 /* Products */,
+				90C28A3B25B678B200D47D75 /* Frameworks */,
 			);
+			sourceTree = "<group>";
+		};
+		90C28A3A25B6785500D47D75 /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				90C28A3825B6784400D47D75 /* YSecuKeypadSDK.framework */,
+			);
+			path = Library;
+			sourceTree = "<group>";
+		};
+		90C28A3B25B678B200D47D75 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				90C28A3E25B6791700D47D75 /* libz.tbd */,
+				90C28A3C25B678B200D47D75 /* AudioToolbox.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -122,10 +145,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-
 				F4FF95D7245B92E800C19C63 /* SecureKeypad.swift in Sources */,
-				B3E7B58A1CC2AC0600A0062D /* SecureKeypad.m in Sources */,
-
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -228,6 +248,10 @@
 		58B511F01A9E6C8500147676 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -238,17 +262,19 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = SecureKeypad;
 				SKIP_INSTALL = YES;
-
 				SWIFT_OBJC_BRIDGING_HEADER = "SecureKeypad-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-
 			};
 			name = Debug;
 		};
 		58B511F11A9E6C8500147676 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -259,10 +285,8 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = SecureKeypad;
 				SKIP_INSTALL = YES;
-
 				SWIFT_OBJC_BRIDGING_HEADER = "SecureKeypad-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-
 			};
 			name = Release;
 		};

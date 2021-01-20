@@ -31,8 +31,8 @@
 		90C28A3C25B678B200D47D75 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
 		90C28A3E25B6791700D47D75 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
 		90C28A4125B6953A00D47D75 /* SecureKeypad-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SecureKeypad-Bridging-Header.h"; sourceTree = "<group>"; };
-		90C28A4225B6958F00D47D75 /* SecureKeypad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecureKeypad.h; sourceTree = "<group>"; };
 		90C28A5825B7AFD900D47D75 /* Resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources; sourceTree = "<group>"; };
+		90C28B4A25B7C6C500D47D75 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* SecureKeypad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecureKeypad.m; sourceTree = "<group>"; };
 		F4FF95D6245B92E800C19C63 /* SecureKeypad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureKeypad.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -64,7 +64,7 @@
 			children = (
 				90C28A3A25B6785500D47D75 /* Library */,
 				F4FF95D6245B92E800C19C63 /* SecureKeypad.swift */,
-				90C28A4225B6958F00D47D75 /* SecureKeypad.h */,
+				90C28B4A25B7C6C500D47D75 /* AppDelegate.h */,
 				B3E7B5891CC2AC0600A0062D /* SecureKeypad.m */,
 				90C28A4125B6953A00D47D75 /* SecureKeypad-Bridging-Header.h */,
 				134814211AA4EA7D00B7C361 /* Products */,
@@ -251,14 +251,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/Library",
+					"$(SRCROOT)/Library",
 					"$(inherited)",
-					"$(PROJECT_DIR)",
 				);
 				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../../ios/giftuserapp",
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
+					"$(SRCROOT)/../../react-native-secure-keypad/ios/Library/YSecuKeypadSDK.framework/Versions/A/Headers",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
@@ -274,14 +277,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/Library",
+					"$(SRCROOT)/Library",
 					"$(inherited)",
-					"$(PROJECT_DIR)",
 				);
 				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../../ios/giftuserapp",
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
+					"$(SRCROOT)/../../react-native-secure-keypad/ios/Library/YSecuKeypadSDK.framework/Versions/A/Headers",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";

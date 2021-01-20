@@ -6,11 +6,10 @@ secure keypad for react-native
 
 ```sh
 yarn add https://github.com/The9-Kim/react-native-secure-keypad
-cd ios
-pod install
+cd ios && pod install && cd ..
 ```
 
-아래 라이브러리를 ios Project > Link Binary With Libraries 에 추가한다.
+아래 라이브러리를 ios Targets > Link Binary With Libraries 에 추가한다.
 
 YSecuKeypadSDK.framework
 libz.tbd

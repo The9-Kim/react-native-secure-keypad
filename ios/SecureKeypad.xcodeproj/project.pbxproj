@@ -32,6 +32,7 @@
 		90C28A3E25B6791700D47D75 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
 		90C28A4125B6953A00D47D75 /* SecureKeypad-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SecureKeypad-Bridging-Header.h"; sourceTree = "<group>"; };
 		90C28A4225B6958F00D47D75 /* SecureKeypad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecureKeypad.h; sourceTree = "<group>"; };
+		90C28A5825B7AFD900D47D75 /* Resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* SecureKeypad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecureKeypad.m; sourceTree = "<group>"; };
 		F4FF95D6245B92E800C19C63 /* SecureKeypad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureKeypad.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -74,6 +75,7 @@
 		90C28A3A25B6785500D47D75 /* Library */ = {
 			isa = PBXGroup;
 			children = (
+				90C28A5825B7AFD900D47D75 /* Resources */,
 				90C28A3825B6784400D47D75 /* YSecuKeypadSDK.framework */,
 			);
 			path = Library;

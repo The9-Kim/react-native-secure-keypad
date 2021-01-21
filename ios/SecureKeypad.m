@@ -26,6 +26,8 @@
     NSString *gMethod;
     NSString *gLabelText;
     NSString *gKpdType;
+    // NSString *gRequestUrl;
+    
     
     NSMutableDictionary *gDictParseData;
     NSArray *gSegmentArray;
@@ -49,7 +51,10 @@ RCT_EXPORT_MODULE()
 //}
 
 RCT_REMAP_METHOD(show,
-                 showWithUrl:(nonnull NSString*) url maxLength:(NSInteger) maxLength labelText:(nonnull NSString*) labelText isNeedNewHash: (BOOL)isNeedNewHash
+                 showWithUrl:(nonnull NSString*) url
+                 maxLength:(NSInteger) maxLength
+                 labelText:(nonnull NSString*) labelText
+                 isNeedNewHash: (BOOL)isNeedNewHash
                  withResolver:(RCTPromiseResolveBlock)resolve
                  withRejecter:(RCTPromiseRejectBlock)reject)
 {
@@ -67,8 +72,41 @@ RCT_REMAP_METHOD(show,
     } else {
         [self callKeypad];
     }
+}
+
+RCT_REMAP_METHOD(request,
+                 requestWithUrl:(nonnull NSString*) url
+                 bodyJsonStr:(nonnull NSString*) bodyJsonStr
+                 token:(nonnull NSString*) token
+                 withResolver:(RCTPromiseResolveBlock)resolve
+                 withRejecter:(RCTPromiseRejectBlock)reject)
+{
+    resolver = resolve;
+    rejecter = reject;
     
-    //    resolve(result);
+    // gRequestUrl = url;
+    gDictParseData = [[NSMutableDictionary alloc] init];
+    [self requestWithUrl:url andBodyJson:bodyJsonStr andToken:token];
+}
+// fun request(url: String, bodyJsonStr: String, token: String, promise: Promise) {
+//     mRequestPromise = promise
+//     strRequestUrl = url
+
+//     if (strRequestUrl.isNotBlank()) {
+//         SendDataTask().execute(strKpdType, bodyJsonStr, token, strRequestUrl)
+//     }
+// }
+
+- (void)requestWithUrl:(NSString *)url andBodyJson:(NSString *) bodyJsonStr andToken:(NSString *) token
+{
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    YHDBHTTPRequest *httpRequest = [[YHDBHTTPRequest alloc] init];
+    NSDictionary *bodyObject = [bodyJsonStr objectFromJSONString];
+    NSMutableDictionary *headObject = [[NSMutableDictionary alloc] init];
+    [headObject setValue:[NSString stringWithFormat:@"Bearer %@", token] forKey:@"Authorization"];
+    
+    [httpRequest setDelegate:self selector:@selector(didRequestDataReceiveFinished:setCookie:) errTarget:self errSelector:@selector(didRequestDataReceiveWithError:errDesc:)];
+    [httpRequest requestUrl:url bodyObject:bodyObject headObject:headObject];
 }
 
 - (void)requestSecuKeypadHash
@@ -76,7 +114,7 @@ RCT_REMAP_METHOD(show,
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     YHDBHTTPRequest *httpRequest = [[YHDBHTTPRequest alloc] init];
     NSDictionary *bodyObject = [NSDictionary dictionaryWithObjectsAndKeys:gMethod, @"method", gKpdType, @"kpdType", nil];
-    [httpRequest setDelegate:self selector:@selector(didRequestDataReceiveFinished:setCookie:) errTarget:self errSelector:@selector(didRequestDataReceiveWithError:errDesc:)];
+    [httpRequest setDelegate:self selector:@selector(didKeypadRequestDataReceiveFinished:setCookie:) errTarget:self errSelector:@selector(didRequestDataReceiveWithError:errDesc:)];
     [httpRequest requestUrl:gHashUrl bodyObject:bodyObject headObject:nil];
 }
 
@@ -127,13 +165,39 @@ RCT_REMAP_METHOD(show,
         }
     }
     if (rejecter != nil) {
-        rejecter(errCodeValue, errDesc, nil);
+        rejecter([NSString stringWithFormat:@"%d", errCodeValue], errDesc, nil);
         resolver = nil;
         rejecter = nil;
     }
 }
 
+
+- (void)didKeypadRequestDataReceiveFinished:(NSString *)result setCookie:(NSString *)cookie
+{
+    gStrCookie = cookie;
+    [self parseKeypadRequestDataValue:result];
+}
+
 - (void)parseRequestDataValue:(NSString *)strValue
+{
+    NSDictionary *jsonData = [strValue objectFromJSONString];
+    NSString *strCode = [jsonData objectForKey:@"code"];
+   
+    if ([@"0000" isEqualToString:strCode]) {
+        if (resolver != nil) {
+            resolver(strValue);
+        }
+    } else {
+        if (rejecter != nil) {
+            NSString *message = [jsonData objectForKey:@"message"];
+            rejecter(strCode, message, nil);
+            resolver = nil;
+            rejecter = nil;
+        }
+    }
+}
+
+- (void)parseKeypadRequestDataValue:(NSString *)strValue
 {
     if ([gMethod isEqualToString:@"json"]) {
         NSDictionary *jsonData = [strValue objectFromJSONString];
@@ -300,7 +364,7 @@ RCT_REMAP_METHOD(show,
         NSError *err;
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDic options:0 error:&err];
         NSString *jsonDicStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-
+        
         NSLog(@"%@", jsonDicStr);
         if (resolver != nil) {
             resolver(jsonDicStr);
@@ -311,7 +375,7 @@ RCT_REMAP_METHOD(show,
         NSMutableDictionary *jsonDic = [[NSMutableDictionary alloc] init];
         [jsonDic setValue:inputValue forKey:@"inputValue"];
         [jsonDic setValue:hashValue forKey:@"inputHash"];
-
+        
         if (rejecter != nil) {
             rejecter(@"", [e reason], nil);
         }

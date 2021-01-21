@@ -33,10 +33,10 @@
 
 RCT_EXPORT_MODULE()
 
-// - (dispatch_queue_t)methodQueue
-// {
-//     return dispatch_get_main_queue();
-// }
+- (dispatch_queue_t)methodQueue
+{
+    return dispatch_get_main_queue();
+}
 
 // - (UIView *)view
 // {
@@ -126,6 +126,11 @@ RCT_REMAP_METHOD(show,
             [[NSRunLoop mainRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01f]];
         }
     }
+    if (rejecter != nil) {
+        rejecter(errCodeValue, errDesc, nil);
+        resolver = nil;
+        rejecter = nil;
+    }
 }
 
 - (void)parseRequestDataValue:(NSString *)strValue
@@ -167,7 +172,11 @@ RCT_REMAP_METHOD(show,
             } else {
                 errorMsg = @"[y-SecuKeypad] 알 수 없는 오류입니다.";
             }
-            
+            if (rejecter != nil) {
+                rejecter(strCode, errorMsg, nil);
+                resolver = nil;
+                rejecter = nil;
+            }
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"오류" message:errorMsg delegate:nil cancelButtonTitle:@"확인" otherButtonTitles:nil];
             [alertView show];
         }
@@ -230,7 +239,11 @@ RCT_REMAP_METHOD(show,
                 } else {
                     errorMsg = @"[y-SecuKeypad] 알 수 없는 오류입니다.";
                 }
-                
+                if (rejecter != nil) {
+                    rejecter(strCode, errorMsg, nil);
+                    resolver = nil;
+                    rejecter = nil;
+                }
                 UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"오류" message:errorMsg delegate:nil cancelButtonTitle:@"확인" otherButtonTitles:nil];
                 [alertView show];
             }
@@ -278,14 +291,36 @@ RCT_REMAP_METHOD(show,
 /* 가상키패드 입력값 반환 이벤트 처리 함수 */
 - (void)onCloseWithRetValue:(NSString *)inputValue setHashValue:(NSString *)hashValue
 {
-    NSLog(@"inputValue :: %@", inputValue);
-    NSLog(@"hashValue :: %@", hashValue);
-    //    [self setInputValue:inputValue];
-    //    [self setHashValue:hashValue];
-    //
-    //    [self.tvPasswd setText:inputValue];
-    //    [self.tvInputValue setText:inputValue];
-    //    [self.tvInputHash setText:hashValue];
+    // NSLog(@"inputValue :: %@", inputValue);
+    // NSLog(@"hashValue :: %@", hashValue);
+    @try {
+        NSMutableDictionary *jsonDic = [[NSMutableDictionary alloc] init];
+        [jsonDic setValue:inputValue forKey:@"inputValue"];
+        [jsonDic setValue:hashValue forKey:@"inputHash"];
+        NSError *err;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDic options:0 error:&err];
+        NSString *jsonDicStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+
+        NSLog(@"%@", jsonDicStr);
+        if (resolver != nil) {
+            resolver(jsonDicStr);
+        }
+        
+    }
+    @catch (NSException * e) {
+        NSMutableDictionary *jsonDic = [[NSMutableDictionary alloc] init];
+        [jsonDic setValue:inputValue forKey:@"inputValue"];
+        [jsonDic setValue:hashValue forKey:@"inputHash"];
+
+        if (rejecter != nil) {
+            rejecter(@"", [e reason], nil);
+        }
+        // NSLog(@"Error: %@%@", [e name], [e reason]);
+    }
+    @finally {
+        resolver = nil;
+        rejecter = nil;
+    }
 }
 /* 가상키패드 입력값 반환 이벤트 처리 함수 */
 

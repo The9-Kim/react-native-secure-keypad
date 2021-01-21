@@ -40,16 +40,6 @@ RCT_EXPORT_MODULE()
     return dispatch_get_main_queue();
 }
 
-// - (UIView *)view
-// {
-//     return [[UIView alloc] init];
-// }
-
-//RCT_CUSTOM_VIEW_PROPERTY(color, NSString, UIView)
-//{
-//  [view setBackgroundColor:[self hexStringToColor:json]];
-//}
-
 RCT_REMAP_METHOD(show,
                  showWithUrl:(nonnull NSString*) url
                  maxLength:(NSInteger) maxLength
@@ -66,10 +56,11 @@ RCT_REMAP_METHOD(show,
     gMethod = @"json";
     gKpdType = @"11";
     gLabelText = labelText;
-    gDictParseData = [[NSMutableDictionary alloc] init];
     if ( isNeedNewHash ) {
+        gDictParseData = [[NSMutableDictionary alloc] init];
         [self requestSecuKeypadHash];
     } else {
+        NSLog(@"gDictParseData :: %@", gDictParseData);
         [self callKeypad];
     }
 }
@@ -101,12 +92,30 @@ RCT_REMAP_METHOD(request,
 {
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     YHDBHTTPRequest *httpRequest = [[YHDBHTTPRequest alloc] init];
-    NSDictionary *bodyObject = [bodyJsonStr objectFromJSONString];
+    
+//    NSDictionary *bodyObject = [bodyJsonStr objectFromJSONString];
+    NSData *jsonData = [bodyJsonStr dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *e;
+    NSDictionary *bodyObject = [NSJSONSerialization JSONObjectWithData:jsonData options:nil error:&e];
+
+    NSMutableDictionary *newObject = [[NSMutableDictionary alloc] initWithDictionary:bodyObject];
+//    [newObject setValue:[bodyObject objectForKey:@"di"] forKey:@"hValue"];
+    [newObject setValue:gKpdType forKey:@"kpdType"];
+    [newObject setValue:gMethod forKey:@"method"];
+
     NSMutableDictionary *headObject = [[NSMutableDictionary alloc] init];
     [headObject setValue:[NSString stringWithFormat:@"Bearer %@", token] forKey:@"Authorization"];
+    [headObject setValue:gStrCookie forKey:@"Cookie"];
+    [headObject setValue:@"application/json" forKey:@"Accept"];
+    [headObject setValue:@"application/json; charset=UTF-8" forKey:@"Content-Type"];
+
+    NSLog(@"requestUrl :: %@", url);
+    NSLog(@"newObject :: %@", newObject);
+    NSLog(@"headObject :: %@", headObject);
+    NSLog(@"Cookie :: %@", gStrCookie);
     
     [httpRequest setDelegate:self selector:@selector(didRequestDataReceiveFinished:setCookie:) errTarget:self errSelector:@selector(didRequestDataReceiveWithError:errDesc:)];
-    [httpRequest requestUrl:url bodyObject:bodyObject headObject:headObject];
+    [httpRequest requestUrl:url bodyObject:newObject headObject:headObject];
 }
 
 - (void)requestSecuKeypadHash
@@ -182,7 +191,18 @@ RCT_REMAP_METHOD(request,
 {
     NSDictionary *jsonData = [strValue objectFromJSONString];
     NSString *strCode = [jsonData objectForKey:@"code"];
-  
+    //    if (code == "0000") {
+    //        mRequestPromise?.let { promise ->
+    //            promise.resolve(result)
+    //            mRequestPromise = null
+    //        }
+    //    } else {
+    //        mRequestPromise?.let { promise ->
+    //            promise.reject(code, resultJsonObject.getString("message"))
+    //            mRequestPromise = null
+    //        }
+    //    }
+    
     
     if ([@"0000" isEqualToString:strCode]) {
         if (resolver != nil) {
@@ -336,8 +356,8 @@ RCT_REMAP_METHOD(request,
         YskNumberPadActivityViewController *yskNumberPadActivityViewController = [[YskNumberPadActivityViewController alloc] init];
         [yskNumberPadActivityViewController setModalPresentationStyle:UIModalPresentationFullScreen];
         
-//        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"13.0")) {
-//        }
+        //        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"13.0")) {
+        //        }
         [yskNumberPadActivityViewController setDelegate:self];
         [yskNumberPadActivityViewController setOrientationDelegate:self];
         [yskNumberPadActivityViewController setYskHash:[self->gDictParseData objectForKey:@"yskhash"]];
@@ -350,10 +370,17 @@ RCT_REMAP_METHOD(request,
         
         [keypadNavigator setNavigationBarHidden:YES];
         [keypadNavigator setModalPresentationStyle:UIModalPresentationFullScreen];
-        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-//        [appDelegate.window.rootViewController setModalPresentationStyle:UIModalPresentationFullScreen];
+        //        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        //        [appDelegate.window.rootViewController setModalPresentationStyle:UIModalPresentationFullScreen];
         [[keypadNavigator view] setBackgroundColor:[UIColor colorWithRed:243.0f/255.0f green:243.0f/255.0f blue:243.0f/255.0f alpha:1.0]];
-        [appDelegate.window.rootViewController presentViewController:keypadNavigator animated:YES completion:nil];
+//        NSLog(@"currentViewController :: %@", currentViewController);
+        
+        double delayInSeconds = 0.5;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            UIViewController *currentViewController = [self topViewController];
+            [currentViewController presentViewController:keypadNavigator animated:NO completion:nil];
+        });
     });
     
     //    [self presentViewController:yskNumberPadActivityViewController animated:YES completion:nil];
@@ -395,5 +422,29 @@ RCT_REMAP_METHOD(request,
     }
 }
 /* 가상키패드 입력값 반환 이벤트 처리 함수 */
+
+- (UIViewController *)topViewController{
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    //    [appDelegate.window.rootViewController setModalPresentationStyle:UIModalPresentationFullScreen];
+    
+    return [self topViewController:appDelegate.window.rootViewController];
+}
+
+- (UIViewController *)topViewController:(UIViewController *)rootViewController
+{
+    if ([rootViewController isKindOfClass:[UINavigationController class]]) {
+        UINavigationController *navigationController = (UINavigationController *)rootViewController;
+        return [self topViewController:[navigationController.viewControllers lastObject]];
+    }
+    if ([rootViewController isKindOfClass:[UITabBarController class]]) {
+        UITabBarController *tabController = (UITabBarController *)rootViewController;
+        return [self topViewController:tabController.selectedViewController];
+    }
+    
+    if (rootViewController.presentedViewController) {
+        return rootViewController.presentedViewController;
+    }
+    return rootViewController;
+}
 
 @end

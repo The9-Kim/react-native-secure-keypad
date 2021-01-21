@@ -26,22 +26,22 @@
     NSString *gMethod;
     NSString *gLabelText;
     NSString *gKpdType;
-
+    
     NSMutableDictionary *gDictParseData;
     NSArray *gSegmentArray;
 };
 
 RCT_EXPORT_MODULE()
 
-- (dispatch_queue_t)methodQueue
-{
-    return dispatch_get_main_queue();
-}
+// - (dispatch_queue_t)methodQueue
+// {
+//     return dispatch_get_main_queue();
+// }
 
-- (UIView *)view
-{
-    return [[UIView alloc] init];
-}
+// - (UIView *)view
+// {
+//     return [[UIView alloc] init];
+// }
 
 //RCT_CUSTOM_VIEW_PROPERTY(color, NSString, UIView)
 //{
@@ -68,7 +68,7 @@ RCT_REMAP_METHOD(show,
         [self callKeypad];
     }
     
-//    resolve(result);
+    //    resolve(result);
 }
 
 - (void)requestSecuKeypadHash
@@ -246,32 +246,32 @@ RCT_REMAP_METHOD(show,
 - (void)callKeypad
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        NSString *yskHash = [gDictParseData objectForKey:@"yskhash"];
+        NSString *yskHash = [self->gDictParseData objectForKey:@"yskhash"];
         
         if (yskHash == nil || [yskHash isEqualToString:@""]) {
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: @"키패드 호출 오류" message:@"키패드 구성에 필요한 값이 누락되었습니다.\n페이지를 새로고침 후 다시 실행하시기 바랍니다." delegate:nil cancelButtonTitle: @"확인" otherButtonTitles: nil];
             [alertView show];
             return;
         }
-
+        
         YskNumberPadActivityViewController *yskNumberPadActivityViewController = [[YskNumberPadActivityViewController alloc] init];
         if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"13.0")) {
             [yskNumberPadActivityViewController setModalPresentationStyle:UIModalPresentationFullScreen];
         }
         [yskNumberPadActivityViewController setDelegate:self];
         [yskNumberPadActivityViewController setOrientationDelegate:self];
-        [yskNumberPadActivityViewController setYskHash:[gDictParseData objectForKey:@"yskhash"]];
-        [yskNumberPadActivityViewController setLabelText:gLabelText];
+        [yskNumberPadActivityViewController setYskHash:[self->gDictParseData objectForKey:@"yskhash"]];
+        [yskNumberPadActivityViewController setLabelText:self->gLabelText];
         [yskNumberPadActivityViewController setIsLandScape:YES];
-        [yskNumberPadActivityViewController setMaxLength:gMaxLength];
+        [yskNumberPadActivityViewController setMaxLength:self->gMaxLength];
         [yskNumberPadActivityViewController setIsSecureString:YES];
-
+        
         UINavigationController *keypadNavigator = [[UINavigationController alloc] initWithRootViewController:yskNumberPadActivityViewController];
         AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         [appDelegate.window.rootViewController presentViewController:keypadNavigator animated:NO completion:nil];
     });
-
-//    [self presentViewController:yskNumberPadActivityViewController animated:YES completion:nil];
+    
+    //    [self presentViewController:yskNumberPadActivityViewController animated:YES completion:nil];
 }
 /* 가상키패드 호출 이벤트 처리 함수 */
 
@@ -280,12 +280,12 @@ RCT_REMAP_METHOD(show,
 {
     NSLog(@"inputValue :: %@", inputValue);
     NSLog(@"hashValue :: %@", hashValue);
-//    [self setInputValue:inputValue];
-//    [self setHashValue:hashValue];
-//
-//    [self.tvPasswd setText:inputValue];
-//    [self.tvInputValue setText:inputValue];
-//    [self.tvInputHash setText:hashValue];
+    //    [self setInputValue:inputValue];
+    //    [self setHashValue:hashValue];
+    //
+    //    [self.tvPasswd setText:inputValue];
+    //    [self.tvInputValue setText:inputValue];
+    //    [self.tvInputHash setText:hashValue];
 }
 /* 가상키패드 입력값 반환 이벤트 처리 함수 */
 

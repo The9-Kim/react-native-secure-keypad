@@ -13,13 +13,16 @@ Pod::Spec.new do |s|
   s.platforms    = { :ios => "10.0" }
   s.source       = { :git => "https://h-brick.com.git", :tag => "#{s.version}" }
   # s.frameworks = "AudioToolbox"
+  s.resources = 'ios/Library/Resources/**/*.{png}'
 
   s.xcconfig = { 
     # here on LDFLAG, I had to set -l and then the library name (without lib prefix although the file name has it).
-  #  'USER_HEADER_SEARCH_PATHS' => '"${PROJECT_DIR}/.."/',
+    #  'USER_HEADER_SEARCH_PATHS' => '"${PROJECT_DIR}/.."/',
    "FRAMEWORK_SEARCH_PATHS" => '"${PODS_ROOT}/../../node_modules/react-native-secure-keypad/ios/Library"',
- }
-
+  }
+  s.source_files = "ios/**/*.{h,m,mm,swift}"
+    
+  s.dependency "React-Core"
   s.prefix_header_contents = '
   #import <Availability.h>
 
@@ -52,7 +55,5 @@ Pod::Spec.new do |s|
       #import <Foundation/Foundation.h>
   #endif
   '
-  s.source_files = "ios/**/*.{h,m,mm,swift}"
-  
-  s.dependency "React-Core"
+
 end

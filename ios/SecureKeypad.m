@@ -182,7 +182,8 @@ RCT_REMAP_METHOD(request,
 {
     NSDictionary *jsonData = [strValue objectFromJSONString];
     NSString *strCode = [jsonData objectForKey:@"code"];
-   
+  
+    
     if ([@"0000" isEqualToString:strCode]) {
         if (resolver != nil) {
             resolver(strValue);
@@ -195,6 +196,7 @@ RCT_REMAP_METHOD(request,
             rejecter = nil;
         }
     }
+    
 }
 
 - (void)parseKeypadRequestDataValue:(NSString *)strValue
@@ -332,9 +334,10 @@ RCT_REMAP_METHOD(request,
         }
         
         YskNumberPadActivityViewController *yskNumberPadActivityViewController = [[YskNumberPadActivityViewController alloc] init];
-        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"13.0")) {
-            [yskNumberPadActivityViewController setModalPresentationStyle:UIModalPresentationFullScreen];
-        }
+        [yskNumberPadActivityViewController setModalPresentationStyle:UIModalPresentationFullScreen];
+        
+//        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"13.0")) {
+//        }
         [yskNumberPadActivityViewController setDelegate:self];
         [yskNumberPadActivityViewController setOrientationDelegate:self];
         [yskNumberPadActivityViewController setYskHash:[self->gDictParseData objectForKey:@"yskhash"]];
@@ -344,8 +347,13 @@ RCT_REMAP_METHOD(request,
         [yskNumberPadActivityViewController setIsSecureString:YES];
         
         UINavigationController *keypadNavigator = [[UINavigationController alloc] initWithRootViewController:yskNumberPadActivityViewController];
+        
+        [keypadNavigator setNavigationBarHidden:YES];
+        [keypadNavigator setModalPresentationStyle:UIModalPresentationFullScreen];
         AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        [appDelegate.window.rootViewController presentViewController:keypadNavigator animated:NO completion:nil];
+//        [appDelegate.window.rootViewController setModalPresentationStyle:UIModalPresentationFullScreen];
+        [[keypadNavigator view] setBackgroundColor:[UIColor colorWithRed:243.0f/255.0f green:243.0f/255.0f blue:243.0f/255.0f alpha:1.0]];
+        [appDelegate.window.rootViewController presentViewController:keypadNavigator animated:YES completion:nil];
     });
     
     //    [self presentViewController:yskNumberPadActivityViewController animated:YES completion:nil];

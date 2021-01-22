@@ -88,34 +88,77 @@ RCT_REMAP_METHOD(request,
 //     }
 // }
 
-- (void)requestWithUrl:(NSString *)url andBodyJson:(NSString *) bodyJsonStr andToken:(NSString *) token
+- (void)requestWithUrl:(NSString *)urlStr andBodyJson:(NSString *) bodyJsonStr andToken:(NSString *) token
 {
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-    YHDBHTTPRequest *httpRequest = [[YHDBHTTPRequest alloc] init];
+    NSURL *url = [NSURL URLWithString:urlStr];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setHTTPMethod:@"POST"];
+    [request addValue:@"application/json; charset=UTF-8" forHTTPHeaderField:@"Content-Type"];
+    [request addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    [request addValue:gStrCookie forHTTPHeaderField:@"Cookie"];
+    [request addValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
     
-//    NSDictionary *bodyObject = [bodyJsonStr objectFromJSONString];
-    NSData *jsonData = [bodyJsonStr dataUsingEncoding:NSUTF8StringEncoding];
-    NSError *e;
-    NSDictionary *bodyObject = [NSJSONSerialization JSONObjectWithData:jsonData options:nil error:&e];
-
-    NSMutableDictionary *newObject = [[NSMutableDictionary alloc] initWithDictionary:bodyObject];
-//    [newObject setValue:[bodyObject objectForKey:@"di"] forKey:@"hValue"];
-    [newObject setValue:gKpdType forKey:@"kpdType"];
-    [newObject setValue:gMethod forKey:@"method"];
-
-    NSMutableDictionary *headObject = [[NSMutableDictionary alloc] init];
-    [headObject setValue:[NSString stringWithFormat:@"Bearer %@", token] forKey:@"Authorization"];
-    [headObject setValue:gStrCookie forKey:@"Cookie"];
-    [headObject setValue:@"application/json" forKey:@"Accept"];
-    [headObject setValue:@"application/json; charset=UTF-8" forKey:@"Content-Type"];
-
-    NSLog(@"requestUrl :: %@", url);
-    NSLog(@"newObject :: %@", newObject);
-    NSLog(@"headObject :: %@", headObject);
-    NSLog(@"Cookie :: %@", gStrCookie);
+    NSDictionary *bodyObject = [bodyJsonStr objectFromJSONString];
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:bodyObject
+                                                       options:0
+                                                         error:&error];
+    [request setHTTPBody:jsonData];
+    NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    sessionConfiguration.timeoutIntervalForRequest = 30 * 1000;
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:nil delegateQueue:nil];
     
-    [httpRequest setDelegate:self selector:@selector(didRequestDataReceiveFinished:setCookie:) errTarget:self errSelector:@selector(didRequestDataReceiveWithError:errDesc:)];
-    [httpRequest requestUrl:url bodyObject:newObject headObject:headObject];
+    //    NSHTTPURLResponse *response = NULL;
+    NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:
+                                  ^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) {
+            if ( self->rejecter ) {
+                self->rejecter([NSString stringWithFormat:@"%ld", (long)[error code]], [error localizedDescription], error);
+                self->rejecter = nil;
+                self->resolver = nil;
+            }
+            return;
+        }
+        
+        if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+            NSString *jsonString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            [self didRequestDataReceiveFinished:jsonString setCookie:self->gStrCookie];
+            //            NSLog(@"response :: %@", jsonData);
+            //            NSLog(@"Response HTTP Status code: %ld\n", (long)[(NSHTTPURLResponse *)response statusCode]);
+            //            NSLog(@"Response HTTP Headers:\n%@\n", [(NSHTTPURLResponse *)response allHeaderFields]);
+            //            NSLog(@"Response HTTP Headers:\n%@\n", [(NSHTTPURLResponse *)response textEncodingName]);
+        }
+        
+    }];
+    [task resume];
+    
+    
+    //    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    //    YHDBHTTPRequest *httpRequest = [[YHDBHTTPRequest alloc] init];
+    //
+    ////    NSDictionary *bodyObject = [bodyJsonStr objectFromJSONString];
+    //    NSData *jsonData = [bodyJsonStr dataUsingEncoding:NSUTF8StringEncoding];
+    //    NSError *e;
+    //    NSDictionary *bodyObject = [NSJSONSerialization JSONObjectWithData:jsonData options:nil error:&e];
+    //
+    //    NSMutableDictionary *newObject = [[NSMutableDictionary alloc] initWithDictionary:bodyObject];
+    ////    [newObject setValue:[bodyObject objectForKey:@"di"] forKey:@"hValue"];
+    //    [newObject setValue:gKpdType forKey:@"kpdType"];
+    //    [newObject setValue:gMethod forKey:@"method"];
+    //
+    //    NSMutableDictionary *headObject = [[NSMutableDictionary alloc] init];
+    //    [headObject setValue:[NSString stringWithFormat:@"Bearer %@", token] forKey:@"Authorization"];
+    //    [headObject setValue:gStrCookie forKey:@"Cookie"];
+    //    [headObject setValue:@"application/json" forKey:@"Accept"];
+    //    [headObject setValue:@"application/json; charset=UTF-8" forKey:@"Content-Type"];
+    //
+    //    NSLog(@"requestUrl :: %@", url);
+    //    NSLog(@"newObject :: %@", newObject);
+    //    NSLog(@"headObject :: %@", headObject);
+    //    NSLog(@"Cookie :: %@", gStrCookie);
+    //
+    //    [httpRequest setDelegate:self selector:@selector(didRequestDataReceiveFinished:setCookie:) errTarget:self errSelector:@selector(didRequestDataReceiveWithError:errDesc:)];
+    //    [httpRequest requestUrl:url bodyObject:newObject headObject:headObject];
 }
 
 - (void)requestSecuKeypadHash
@@ -373,7 +416,7 @@ RCT_REMAP_METHOD(request,
         //        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         //        [appDelegate.window.rootViewController setModalPresentationStyle:UIModalPresentationFullScreen];
         [[keypadNavigator view] setBackgroundColor:[UIColor colorWithRed:243.0f/255.0f green:243.0f/255.0f blue:243.0f/255.0f alpha:1.0]];
-//        NSLog(@"currentViewController :: %@", currentViewController);
+        //        NSLog(@"currentViewController :: %@", currentViewController);
         
         double delayInSeconds = 0.5;
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));

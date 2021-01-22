@@ -420,12 +420,12 @@ RCT_REMAP_METHOD(request,
         [[keypadNavigator view] setBackgroundColor:[UIColor colorWithRed:243.0f/255.0f green:243.0f/255.0f blue:243.0f/255.0f alpha:1.0]];
         //        NSLog(@"currentViewController :: %@", currentViewController);
         
-        double delayInSeconds = 0.5;
-        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+//        double delayInSeconds = 0.5;
+//        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+//        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             UIViewController *currentViewController = [self topViewController];
             [currentViewController presentViewController:keypadNavigator animated:NO completion:nil];
-        });
+//        });
     });
     
     //    [self presentViewController:yskNumberPadActivityViewController animated:YES completion:nil];
@@ -437,6 +437,8 @@ RCT_REMAP_METHOD(request,
 {
     // NSLog(@"inputValue :: %@", inputValue);
     // NSLog(@"hashValue :: %@", hashValue);
+    double delayInSeconds = 0.5;
+
     @try {
         NSMutableDictionary *jsonDic = [[NSMutableDictionary alloc] init];
         [jsonDic setValue:inputValue forKey:@"inputValue"];
@@ -447,7 +449,12 @@ RCT_REMAP_METHOD(request,
         
         NSLog(@"%@", jsonDicStr);
         if (resolver != nil) {
-            resolver(jsonDicStr);
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                self->resolver(jsonDicStr);
+                self->resolver = nil;
+                self->rejecter = nil;
+            });
         }
         
     }
@@ -457,13 +464,18 @@ RCT_REMAP_METHOD(request,
         [jsonDic setValue:hashValue forKey:@"inputHash"];
         
         if (rejecter != nil) {
-            rejecter(@"", [e reason], nil);
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                self->rejecter(@"", [e reason], nil);
+                self->resolver = nil;
+                self->rejecter = nil;
+            });
         }
         // NSLog(@"Error: %@%@", [e name], [e reason]);
     }
     @finally {
-        resolver = nil;
-        rejecter = nil;
+//        resolver = nil;
+//        rejecter = nil;
     }
 }
 /* 가상키패드 입력값 반환 이벤트 처리 함수 */

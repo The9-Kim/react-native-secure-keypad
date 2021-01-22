@@ -56,11 +56,13 @@ RCT_REMAP_METHOD(show,
     gMethod = @"json";
     gKpdType = @"11";
     gLabelText = labelText;
+    NSLog(@"isNeedNewHash : %@", (isNeedNewHash ? @"YES" : @"NO"));
+
+    출처: https://sharphail.tistory.com/52 [샤해의 포스트잇]
     if ( isNeedNewHash ) {
         gDictParseData = [[NSMutableDictionary alloc] init];
         [self requestSecuKeypadHash];
     } else {
-        NSLog(@"gDictParseData :: %@", gDictParseData);
         [self callKeypad];
     }
 }
@@ -475,19 +477,18 @@ RCT_REMAP_METHOD(request,
 
 - (UIViewController *)topViewController:(UIViewController *)rootViewController
 {
-    if ([rootViewController isKindOfClass:[UINavigationController class]]) {
-        UINavigationController *navigationController = (UINavigationController *)rootViewController;
-        return [self topViewController:[navigationController.viewControllers lastObject]];
-    }
     if ([rootViewController isKindOfClass:[UITabBarController class]]) {
-        UITabBarController *tabController = (UITabBarController *)rootViewController;
-        return [self topViewController:tabController.selectedViewController];
+        UITabBarController* tabBarController = (UITabBarController*)rootViewController;
+        return [self topViewController:tabBarController.selectedViewController];
+    } else if ([rootViewController isKindOfClass:[UINavigationController class]]) {
+        UINavigationController* navigationController = (UINavigationController*)rootViewController;
+        return [self topViewController:navigationController.visibleViewController];
+    } else if (rootViewController.presentedViewController) {
+        UIViewController* presentedViewController = rootViewController.presentedViewController;
+        return [self topViewController:presentedViewController];
+    } else {
+        return rootViewController;
     }
-    
-    if (rootViewController.presentedViewController) {
-        return rootViewController.presentedViewController;
-    }
-    return rootViewController;
 }
 
 @end

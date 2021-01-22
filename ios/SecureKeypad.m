@@ -81,14 +81,6 @@ RCT_REMAP_METHOD(request,
     gDictParseData = [[NSMutableDictionary alloc] init];
     [self requestWithUrl:url andBodyJson:bodyJsonStr andToken:token];
 }
-// fun request(url: String, bodyJsonStr: String, token: String, promise: Promise) {
-//     mRequestPromise = promise
-//     strRequestUrl = url
-
-//     if (strRequestUrl.isNotBlank()) {
-//         SendDataTask().execute(strKpdType, bodyJsonStr, token, strRequestUrl)
-//     }
-// }
 
 - (void)requestWithUrl:(NSString *)urlStr andBodyJson:(NSString *) bodyJsonStr andToken:(NSString *) token
 {
@@ -235,19 +227,7 @@ RCT_REMAP_METHOD(request,
 - (void)parseRequestDataValue:(NSString *)strValue
 {
     NSDictionary *jsonData = [strValue objectFromJSONString];
-    NSString *strCode = [jsonData objectForKey:@"code"];
-    //    if (code == "0000") {
-    //        mRequestPromise?.let { promise ->
-    //            promise.resolve(result)
-    //            mRequestPromise = null
-    //        }
-    //    } else {
-    //        mRequestPromise?.let { promise ->
-    //            promise.reject(code, resultJsonObject.getString("message"))
-    //            mRequestPromise = null
-    //        }
-    //    }
-    
+    NSString *strCode = [jsonData objectForKey:@"code"];  
     
     if ([@"0000" isEqualToString:strCode]) {
         if (resolver != nil) {

@@ -58,7 +58,6 @@ RCT_REMAP_METHOD(show,
     gLabelText = labelText;
     NSLog(@"isNeedNewHash : %@", (isNeedNewHash ? @"YES" : @"NO"));
 
-    출처: https://sharphail.tistory.com/52 [샤해의 포스트잇]
     if ( isNeedNewHash ) {
         gDictParseData = [[NSMutableDictionary alloc] init];
         [self requestSecuKeypadHash];

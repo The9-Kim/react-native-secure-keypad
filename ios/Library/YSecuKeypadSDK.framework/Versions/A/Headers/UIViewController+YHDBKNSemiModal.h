@@ -45,13 +45,6 @@ extern const struct YHDBKNSemiModalOptionKeys {
     __unsafe_unretained NSString *backgroundView;     // UIView, custom background.
 } YHDBKNSemiModalOptionKeys;
 
-NS_ENUM(NSUInteger, YHDBKNSemiModalTransitionStyle) {
-    YHDBKNSemiModalTransitionStyleSlideUp,
-    YHDBKNSemiModalTransitionStyleFadeInOut,
-    YHDBKNSemiModalTransitionStyleFadeIn,
-    YHDBKNSemiModalTransitionStyleFadeOut,
-};
-
 typedef void (^YHDBKNTransitionCompletionBlock)(void);
 
 @interface UIViewController (YHDBKNSemiModal)

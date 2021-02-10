@@ -56,7 +56,7 @@ RCT_REMAP_METHOD(show,
     gMethod = @"json";
     gKpdType = @"11";
     gLabelText = labelText;
-    NSLog(@"isNeedNewHash : %@", (isNeedNewHash ? @"YES" : @"NO"));
+    // NSLog(@"isNeedNewHash : %@", (isNeedNewHash ? @"YES" : @"NO"));
 
     if ( isNeedNewHash ) {
         gDictParseData = [[NSMutableDictionary alloc] init];
@@ -426,7 +426,7 @@ RCT_REMAP_METHOD(request,
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDic options:0 error:&err];
         NSString *jsonDicStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         
-        NSLog(@"%@", jsonDicStr);
+        // NSLog(@"%@", jsonDicStr);
         if (resolver != nil) {
             dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
             dispatch_after(popTime, dispatch_get_main_queue(), ^(void){

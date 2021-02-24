@@ -210,7 +210,7 @@ RCT_REMAP_METHOD(request,
         }
     }
     if (rejecter != nil) {
-        rejecter([NSString stringWithFormat:@"%d", errCodeValue], errDesc, nil);
+        rejecter([NSString stringWithFormat:@"%ld", (long)errCodeValue], errDesc, nil);
         resolver = nil;
         rejecter = nil;
     }
@@ -219,14 +219,16 @@ RCT_REMAP_METHOD(request,
 
 - (void)didKeypadRequestDataReceiveFinished:(NSString *)result setCookie:(NSString *)cookie
 {
-    gStrCookie = cookie;
+    if ( cookie != nil ) {
+        gStrCookie = cookie;
+    }
     [self parseKeypadRequestDataValue:result];
 }
 
 - (void)parseRequestDataValue:(NSString *)strValue
 {
     NSDictionary *jsonData = [strValue objectFromJSONString];
-    NSString *strCode = [jsonData objectForKey:@"code"];  
+    NSString *strCode = [jsonData objectForKey:@"code"];
     
     if ([@"0000" isEqualToString:strCode]) {
         if (resolver != nil) {
@@ -370,7 +372,8 @@ RCT_REMAP_METHOD(request,
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         NSString *yskHash = [self->gDictParseData objectForKey:@"yskhash"];
-        
+        // NSString *dicStr = [NSString stringWithFormat:@"my dictionary is %@", gDictParseData];
+        // NSLog(@"%@", dicStr);
         if (yskHash == nil || [yskHash isEqualToString:@""]) {
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle: @"키패드 호출 오류" message:@"키패드 구성에 필요한 값이 누락되었습니다.\n페이지를 새로고침 후 다시 실행하시기 바랍니다." delegate:nil cancelButtonTitle: @"확인" otherButtonTitles: nil];
             [alertView show];
@@ -426,7 +429,7 @@ RCT_REMAP_METHOD(request,
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDic options:0 error:&err];
         NSString *jsonDicStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         
-        // NSLog(@"%@", jsonDicStr);
+//        NSLog(@"%@", jsonDicStr);
         if (resolver != nil) {
             dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
             dispatch_after(popTime, dispatch_get_main_queue(), ^(void){

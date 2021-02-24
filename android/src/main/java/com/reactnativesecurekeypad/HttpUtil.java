@@ -97,7 +97,7 @@ public class HttpUtil {
 //            ostream.flush();
 //            ostream.close();
 
-            OutputStream ostream = conHttp.getOutputStream();
+            OutputStream ostream = conHttps.getOutputStream();
             ostream.write(json.getBytes("UTF-8"));
             ostream.flush();
             ostream.close();

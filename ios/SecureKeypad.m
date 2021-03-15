@@ -402,12 +402,12 @@ RCT_REMAP_METHOD(request,
         [[keypadNavigator view] setBackgroundColor:[UIColor colorWithRed:243.0f/255.0f green:243.0f/255.0f blue:243.0f/255.0f alpha:1.0]];
         //        NSLog(@"currentViewController :: %@", currentViewController);
         
-//        double delayInSeconds = 0.5;
-//        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-//        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+       double delayInSeconds = 0.5;
+       dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+       dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             UIViewController *currentViewController = [self topViewController];
             [currentViewController presentViewController:keypadNavigator animated:NO completion:nil];
-//        });
+       });
     });
     
     //    [self presentViewController:yskNumberPadActivityViewController animated:YES completion:nil];

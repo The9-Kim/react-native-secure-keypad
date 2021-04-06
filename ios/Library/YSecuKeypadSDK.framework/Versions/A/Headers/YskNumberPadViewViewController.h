@@ -24,6 +24,7 @@
 @property (unsafe_unretained, nonatomic) id <YSecuKeypadDelegate> delegate;
 @property (strong, nonatomic) NSString *yskHash;
 @property (assign, nonatomic) NSInteger maxLength;
+@property (assign, nonatomic) NSInteger minLength;
 @property (assign, nonatomic) BOOL isLandScape;
 @property (strong, nonatomic) NSString *labelText;
 @property (assign, nonatomic) BOOL isSecureString;
